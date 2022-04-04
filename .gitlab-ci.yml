@@ -1,0 +1,91 @@
+variables:
+  ARTIFACTS_DIR: "/builds/macallen2022/Vue3"
+
+cache:
+  key: ${CI_COMMIT_REF_SLUG}
+  paths:
+    - node_modules/
+
+stages:
+- build vue
+- test vue
+- deploy vue
+
+build:
+  image: node:16-alpine
+  stage: build vue
+  environment:
+    name: nodejs    
+  script:
+    - echo $JOB_ID
+    - echo "$CI_JOB_STAGE"    
+    - yarn install        
+    - yarn build    
+  artifacts:
+    name: "$CI_JOB_NAME"
+    untracked: false
+    expire_in: 30 days
+    paths:
+      - $ARTIFACTS_DIR
+      
+test:
+  image: ubuntu:latest
+  stage: test vue
+  environment: 
+    name: ubuntu
+  cache:
+    key: ${CI_COMMIT_REF_SLUG}
+    paths:
+      - venv/
+  script:
+    - echo $JOB_ID
+    - echo "$CI_JOB_STAGE"        
+    - echo $CI_PROJECT_DIR
+    - apt-get update
+    - apt-get install sudo        
+    - sudo apt update && sudo apt upgrade -y
+    - apt-get install -y curl
+    - curl -sL https://deb.nodesource.com/setup_14.x | sudo bash -
+    - apt-get install -y nodejs         
+    - /usr/bin/npm -v
+    - sudo npm cache clean -f
+    - sudo npm install -g n
+    - sudo n stable
+    - hash -r 
+    - sudo apt update && sudo apt upgrade -y
+    - sudo apt install software-properties-common -y
+    - sudo add-apt-repository ppa:deadsnakes/ppa -y
+    - sudo apt install python3.10 -y
+    - sudo apt update && sudo apt upgrade -y
+    - apt-get install -y python3-pip
+    - sudo apt update && sudo apt upgrade -y    
+    - /usr/bin/pip3 install -r requirements.txt    
+    - /usr/bin/pip3 install playwright
+    - /usr/bin/pip3 install pytest-playwright
+    - /usr/bin/pip3 install pytest-html
+    - playwright install
+    - playwright install-deps 
+    - sudo apt update && sudo apt upgrade -y
+    - sudo apt-get install yarn -y    
+    - /usr/bin/yarn --version
+    - /usr/bin/npm install
+    - /usr/bin/npm run build        
+    - /usr/bin/npm run serve -- --port 8081 &   
+    - sleep 10 
+    - /usr/bin/curl http://localhost:8081/login
+    - /usr/local/bin/pytest            
+  artifacts:
+    name: "$CI_JOB_NAME"
+    untracked: false
+    expire_in: 2 days
+    paths:
+      - $ARTIFACTS_DIR
+
+
+deploy production:
+  stage: deploy vue
+  environment:
+    name: heruko
+  when: manual
+  script: 
+    -echo $JOB_ID
