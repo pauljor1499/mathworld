@@ -3,6 +3,7 @@ import LandingPage from "../views/Landing.vue";
 import LogInPage from "../views/LogIn.vue";
 import RegisterPage from "../views/Register.vue";
 import WelcomePage from "../views/Welcome.vue";
+import Dashboard from "../views/Dashboard.vue";
 const routes = [
 	{
 		path: "/",
@@ -23,6 +24,11 @@ const routes = [
 		path: "/welcome",
 		name: "WelcomePage",
 		component: WelcomePage,
+	},
+	{
+		path: "/dashboard",
+		name: "Dashboard",
+		component: Dashboard,
 	},
 ];
 

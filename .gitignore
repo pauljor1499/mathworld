@@ -8,12 +8,6 @@ venv
 /venv
 venv
 __pycache__
-reports.*
-report.*
-/report
-/reports
-\report
-\reports
 
 # local env files
 .env.local
@@ -33,7 +27,9 @@ pnpm-debug.log*
 *.njsproj
 *.sln
 *.sw?
+<<<<<<< HEAD
 .git
+=======
 .git
 *.pyc
 

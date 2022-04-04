@@ -22,7 +22,6 @@ build:
     - yarn install        
     - yarn build    
   artifacts:
-    name: "$CI_JOB_NAME"
     untracked: false
     expire_in: 30 days
     paths:
@@ -42,7 +41,7 @@ test:
     - echo "$CI_JOB_STAGE"        
     - echo $CI_PROJECT_DIR
     - apt-get update
-    - apt-get install sudo        
+    - apt-get install sudo    
     - sudo apt update && sudo apt upgrade -y
     - apt-get install -y curl
     - curl -sL https://deb.nodesource.com/setup_14.x | sudo bash -
@@ -59,28 +58,27 @@ test:
     - sudo apt update && sudo apt upgrade -y
     - apt-get install -y python3-pip
     - sudo apt update && sudo apt upgrade -y    
-    - /usr/bin/pip3 install -r requirements.txt    
+    - /usr/bin/pip3 install -r requirements.txt
     - /usr/bin/pip3 install playwright
     - /usr/bin/pip3 install pytest-playwright
-    - /usr/bin/pip3 install pytest-html
     - playwright install
     - playwright install-deps 
     - sudo apt update && sudo apt upgrade -y
-    - sudo apt-get install yarn -y    
+    - sudo apt-get install yarn -y
     - /usr/bin/yarn --version
     - /usr/bin/npm install
     - /usr/bin/npm run build        
     - /usr/bin/npm run serve -- --port 8081 &   
     - sleep 10 
     - /usr/bin/curl http://localhost:8081/login
-    - /usr/local/bin/pytest            
+    - /usr/local/bin/pytest
+    
+    
   artifacts:
-    name: "$CI_JOB_NAME"
     untracked: false
-    expire_in: 2 days
+    expire_in: 30 days
     paths:
       - $ARTIFACTS_DIR
-
 
 deploy production:
   stage: deploy vue
