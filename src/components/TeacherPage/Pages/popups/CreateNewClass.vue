@@ -264,7 +264,6 @@ export default {
 }
 
 .footer {
-  background-color: blue;
   width: 100%;
 }
 
